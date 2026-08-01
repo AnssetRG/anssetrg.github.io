@@ -3,38 +3,111 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Multimedia Album</title>
+    <title>Visual Media Album</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background: #f4f4f9; color: #333; text-align: center; }
-        h1 { margin-bottom: 10px; }
-        .gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; padding: 20px; max-width: 1200px; margin: auto; }
-        .media-card { background: white; padding: 15px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); text-align: left; }
-        img, video, audio { width: 100%; height: auto; border-radius: 4px; }
-        audio { margin-top: 10px; }
-        p { font-size: 14px; color: #666; }
+        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background: #121212; color: #e0e0e0; text-align: center; }
+        h1 { margin-bottom: 5px; color: #ffffff; }
+        .subtitle { color: #aaa; margin-bottom: 30px; }
+        .gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; padding: 10px; max-width: 1200px; margin: auto; }
+        .media-card { background: #1e1e1e; padding: 12px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); text-align: left; display: flex; flex-direction: column; justify-content: space-between; }
+        .media-preview { width: 100%; height: 240px; object-fit: cover; border-radius: 6px; background: #000; cursor: pointer; transition: opacity 0.2s; }
+        .media-preview:hover { opacity: 0.85; }
+        video.media-preview { width: 100%; height: 240px; }
+        .caption { font-size: 14px; color: #ccc; margin-top: 10px; }
+        .tag { display: inline-block; font-size: 10px; text-transform: uppercase; background: #333; color: #ff9800; padding: 3px 6px; border-radius: 4px; margin-bottom: 6px; font-weight: bold; }
+        .btn { display: inline-block; margin-top: 8px; padding: 6px 12px; background: #333; color: #fff; text-decoration: none; font-size: 12px; border-radius: 4px; cursor: pointer; border: none; }
+        .btn:hover { background: #444; }
+
+        /* Focus Overlay / Page Styles */
+        #focus-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 1000; justify-content: center; align-items: center; flex-direction: column; padding: 20px; box-sizing: border-box; }
+        #focus-content-container { max-width: 90%; max-height: 75vh; margin-bottom: 20px; display: flex; justify-content: center; align-items: center; }
+        #focus-content-container img, #focus-content-container video { max-width: 100%; max-height: 75vh; object-fit: contain; border-radius: 8px; }
+        .focus-actions { display: flex; gap: 15px; }
+        .close-btn { position: absolute; top: 20px; right: 30px; font-size: 30px; color: #fff; cursor: pointer; background: none; border: none; }
     </style>
 </head>
 <body>
 
-    <h1>My Multimedia Album</h1>
-    <p>Welcome to my collection of photos, videos, and sounds.</p>
+    <h1>Visual Media Album</h1>
+    <p class="subtitle">A curated collection of local files and external web GIFs (e.g., Imgur). Click any item to focus or open its album view.</p>
 
     <div class="gallery">
-        <!-- Image Item -->
+        <!-- Local Image Item -->
         <div class="media-card">
-            <img src="assets/images/sample.png" alt="Sample Image">
-            <p><strong>Photo Title:</strong> Description of the photo goes here.</p>
+            <div>
+                <span class="tag">Image</span>
+                <img src="assets/images/sample-photo.jpg" alt="Sample Photo" class="media-preview" onclick="openFocus('image', 'assets/images/sample-photo.jpg', 'Sunset View: Captured during the evening hike.')">
+            </div>
+            <p class="caption"><strong>Sunset View:</strong> Captured during the evening hike.</p>
+            <button class="btn" onclick="openFocus('image', 'assets/images/sample-photo.jpg', 'Sunset View: Captured during the evening hike.')">Display Image Album</button>
+        </div>
+
+        <!-- External GIF Item (from Imgur Repository URL) -->
+        <div class="media-card">
+            <div>
+                <span class="tag">GIF (Imgur)</span>
+                <img src="https://i.imgur.com/27fonHA.gif" alt="External Imgur GIF" class="media-preview" onclick="openFocus('image', 'https://i.imgur.com/27fonHA.gif', 'External GIF: Sourced via Imgur repository link.')">
+            </div>
+            <p class="caption"><strong>External GIF:</strong> Loaded directly from an external URL repository.</p>
+            <button class="btn" onclick="openFocus('image', 'https://i.imgur.com/27fonHA.gif', 'External GIF: Sourced via Imgur repository link.')">Display Image Album</button>
         </div>
 
         <!-- Video Item -->
         <div class="media-card">
-            <video controls>
-                <source src="assets/videos/sample.mp4" type="video/mp4">
-                Your browser does not support the video tag.
-            </video>
-            <p><strong>Video Title:</strong> Description of the video.</p>
+            <div>
+                <span class="tag">Video</span>
+                <video class="media-preview" onclick="openFocus('video', 'assets/videos/sample-video.mp4', 'Travel Clip: Highlights from the weekend trip.')">
+                    <source src="assets/videos/sample-video.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+            <p class="caption"><strong>Travel Clip:</strong> Highlights from the weekend trip.</p>
+            <button class="btn" onclick="openFocus('video', 'assets/videos/sample-video.mp4', 'Travel Clip: Highlights from the weekend trip.')">Display Image Album</button>
         </div>
     </div>
+
+    <!-- Focus Overlay / Lightbox Page -->
+    <div id="focus-overlay">
+        <button class="close-btn" onclick="closeFocus()">&times;</button>
+        <div id="focus-content-container"></div>
+        <div class="focus-actions">
+            <a id="download-btn" class="btn" href="#" download target="_blank" style="background: #ff9800; color: #000; font-weight: bold; text-decoration: none; padding: 8px 16px;">Download Asset</a>
+            <button class="btn" onclick="closeFocus()">Back to Gallery</button>
+        </div>
+    </div>
+
+    <script>
+        function openFocus(type, src, captionText) {
+            const overlay = document.getElementById('focus-overlay');
+            const container = document.getElementById('focus-content-container');
+            const downloadBtn = document.getElementById('download-btn');
+            
+            container.innerHTML = ''; // Clear previous content
+
+            if (type === 'image') {
+                const img = document.createElement('img');
+                img.src = src;
+                img.alt = captionText;
+                container.appendChild(img);
+            } else if (type === 'video') {
+                const video = document.createElement('video');
+                video.src = src;
+                video.controls = true;
+                video.autoplay = true;
+                container.appendChild(video);
+            }
+
+            downloadBtn.href = src;
+            overlay.style.display = 'flex';
+        }
+
+        function closeFocus() {
+            const overlay = document.getElementById('focus-overlay');
+            const container = document.getElementById('focus-content-container');
+            overlay.style.display = 'none';
+            container.innerHTML = ''; // Stop video playback when closing
+        }
+    </script>
 
 </body>
 </html>
