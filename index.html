@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Multimedia Album</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background: #f4f4f9; color: #333; text-align: center; }
+        h1 { margin-bottom: 10px; }
+        .gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; padding: 20px; max-width: 1200px; margin: auto; }
+        .media-card { background: white; padding: 15px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); text-align: left; }
+        img, video, audio { width: 100%; height: auto; border-radius: 4px; }
+        audio { margin-top: 10px; }
+        p { font-size: 14px; color: #666; }
+    </style>
+</head>
+<body>
+
+    <h1>My Multimedia Album</h1>
+    <p>Welcome to my collection of photos, videos, and sounds.</p>
+
+    <div class="gallery">
+        <!-- Image Item -->
+        <div class="media-card">
+            <img src="assets/images/sample.png" alt="Sample Image">
+            <p><strong>Photo Title:</strong> Description of the photo goes here.</p>
+        </div>
+
+        <!-- Video Item -->
+        <div class="media-card">
+            <video controls>
+                <source src="assets/videos/sample.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <p><strong>Video Title:</strong> Description of the video.</p>
+        </div>
+    </div>
+
+</body>
+</html>
